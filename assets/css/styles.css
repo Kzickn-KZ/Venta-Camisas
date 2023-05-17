@@ -190,6 +190,12 @@ td{
 }
 
 /*FORMS*/
+
+form{
+width: 50%;
+}
+
+
 .form_container{
     width: 50%;
 }
@@ -240,6 +246,7 @@ button, .button{
     border: 1px solid #11608E;
     cursor:pointer;
 }
+
 
 .button{
     background: #33AE3D;
