@@ -20,6 +20,8 @@ class productoController{
         require_once 'views/producto/crear.php';
      }
 
+
+        //Inicio funcion guardar producto
         public function save(){
             Utils::isAdmin();
             if(isset($_POST)){
@@ -30,18 +32,19 @@ class productoController{
             $stock = isset($_POST['stock']) ? $_POST['stock'] : false;
             $categoria = isset($_POST['categoria']) ? $_POST['categoria'] : false;
 
-            if($nombre && $descripcion && $precio && $stock && $categoria){
+                if($nombre && $descripcion && $precio && $stock && $categoria){
 
-                $producto = new Producto();
+                    $producto = new Producto();
 
-                $producto->setNombre($nombre);
-                $producto->setDescripcion($descripcion);
-                $producto->setPrecio($precio);
-                $producto->setStock($stock);
-                $producto->setCategoriaId($categoria);
-
+                    $producto->setNombre($nombre);
+                    $producto->setDescripcion($descripcion);
+                    $producto->setPrecio($precio);
+                    $producto->setStock($stock);
+                    $producto->setCategoriaId($categoria);
 
                 //GUARDAR IMAGEN
+                if(isset($_FILES['imagen'])){
+
                         $file = $_FILES['imagen'];
                         $filename = $file['name'];
                         $mimetype = $file['type'];
@@ -56,9 +59,15 @@ class productoController{
                 $producto->setImagen($filename);
 
                 }
+            }
                 //FIN GUARDAR IMAGEN
-                
-                $save = $producto->save();
+                if(isset($_GET['id'])){
+                    $id = $_GET['id'];
+                    $producto->setId($id); 
+                    $save = $producto->edit();
+                }else{
+                    $save = $producto->save();
+                }
 
                 if($save){
                     $_SESSION['producto'] = "complete";
@@ -74,13 +83,26 @@ class productoController{
                 $_SESSION['producto'] = "failed";
             }
             header("Location:".base_url."/producto/gestion");
-        }
+        }//fin funcion guardar producto
 
 
-
+        //incio funcion editar producto
     public function editar(){
+        Utils::isAdmin();
+        if(isset($_GET['id'])){
+            $edit = true; 
 
-        var_dump($_GET);
+            $id = $_GET['id'];
+            $producto = new Producto();
+            $producto->setId($id);
+            $pro = $producto->getOne();
+
+            require_once 'views/producto/crear.php';
+
+        }else{
+            header('Location'.base_url.'producto/gestion');
+        }
+       
 
     }
 
